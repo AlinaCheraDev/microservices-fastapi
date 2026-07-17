@@ -25,8 +25,11 @@ down:         ## stop db + redis
 migrate:      ## apply latest db migrations
 	uv run alembic upgrade head
 
-run_pets:          ## run the pets service (example)
-	uv run uvicorn src.pets.main:app --reload
+run_accounts:          ## run the accounts service (example)
+	uv run uvicorn src.accounts.main:app --reload --port 8001
 
 run_auth:          ## run the auth service (example)
-	uv run uvicorn src.auth.main:app --reload
+	uv run uvicorn src.auth.main:app --reload --port 8002
+
+run_pets:          ## run the pets service (example)
+	uv run uvicorn src.pets.main:app --reload --port 8003

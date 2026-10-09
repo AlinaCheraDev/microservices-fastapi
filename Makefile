@@ -39,8 +39,23 @@ down:         ## stop postgres + redis
 down_volume:         ## stop postgres + redis and remove volumes
 	docker-compose --env-file .env -f deployment/docker-compose.yml down -v
 
-migrate:      ## apply latest db migrations`
-	uv run alembic upgrade head
+migrate_auth:      ## apply latest db migrations for auth service
+	uv run alembic -c src/auth/alembic.ini upgrade head
+
+migrate_accounts:      ## apply latest db migrations for accounts service
+	uv run alembic -c src/accounts/alembic.ini upgrade head
+
+migrate_pets:      ## apply latest db migrations for pets service
+	uv run alembic -c src/pets/alembic.ini upgrade head
+
+revert_migrate_auth:      ## revert the latest db migration for auth service
+	uv run alembic -c src/auth/alembic.ini downgrade -1
+
+revert_migrate_accounts:      ## revert the latest db migration for accounts service
+	uv run alembic -c src/accounts/alembic.ini downgrade -1
+
+revert_migrate_pets:      ## revert the latest db migration for pets service
+	uv run alembic -c src/pets/alembic.ini downgrade -1
 
 run_accounts:      ## run the accounts service (example)
 	uv run uvicorn src.accounts.main:app --reload --port 8001

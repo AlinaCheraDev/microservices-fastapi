@@ -1,9 +1,10 @@
+from uuid import UUID
+
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.libs.db.entity_mixins import BaseEntityMixin
 from src.pets.db.base import Base
-from uuid import UUID
 
 
 class Pet(Base, BaseEntityMixin):

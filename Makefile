@@ -21,6 +21,15 @@ lint_auth:         ## check style & catch errors
 lint_pets:         ## check style & catch errors
 	uv run ruff check ./src/pets
 
+lint_fix_accounts:         ## fix style & catch errors
+	uv run ruff check ./src/accounts --fix
+
+lint_fix_auth:         ## fix style & catch errors
+	uv run ruff check ./src/auth --fix
+
+lint_fix_pets:         ## fix style & catch errors
+	uv run ruff check ./src/pets --fix
+
 test_accounts:         ## run unit tests
 	uv run pytest ./src/accounts
 

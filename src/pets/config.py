@@ -27,7 +27,8 @@ class PetsSettings(BaseServiceSettings):
     service_host: str = Field(validation_alias="PETS_SERVICE_HOST")
     service_port: int = Field(validation_alias="PETS_SERVICE_PORT")
 
-#TODO explain why lru_cache is used for the settings instance
+
+# TODO explain why lru_cache is used for the settings instance
 @lru_cache
 def get_settings() -> PetsSettings:
     """Return the singleton settings instance.

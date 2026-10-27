@@ -6,20 +6,21 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.libs.db.lifespan import database_lifespan
 from src.libs.db.session import get_session
-from src.pets.config import PetsSettings, get_settings
+from src.pets.config import get_settings
 
 app = FastAPI(lifespan=database_lifespan(get_settings))
 
-SettingsDep = Annotated[PetsSettings, Depends(get_settings)]
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
+# TODO: Decide which one is relevant for k8s to use for liveliness probe
 
-@app.get("/")
-async def read_root(settings: SettingsDep, session: SessionDep):
-    # A round-trip to Postgres: proves the URL, credentials and network all work.
-    postgres_version = (await session.execute(text("SELECT version()"))).scalar_one()
-    return {
-        "service": f"pets @ {settings.service_host}:{settings.service_port}",
-        "database": f"{settings.postgres_user}@{settings.postgres_db}",
-        "postgres": postgres_version,
-    }
+
+@app.get("/health/live")
+async def live():
+    return {"status": "ok"}  # process is running, nothing else
+
+
+@app.get("/health/ready")
+async def ready(session: SessionDep):
+    await session.execute(text("SELECT 1"))  # can reach its DB (and Redis, later)
+    return {"status": "ok"}

@@ -12,12 +12,15 @@ app = FastAPI(lifespan=database_lifespan(get_settings))
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
+# TODO: Decide which one is relevant for k8s to use for liveliness probe
+
 
 @app.get("/health/live")
 async def live():
-    return {"status": "ok"}          # process is running, nothing else
+    return {"status": "ok"}  # process is running, nothing else
+
 
 @app.get("/health/ready")
 async def ready(session: SessionDep):
-    await session.execute(text("SELECT 1"))   # can reach its DB (and Redis, later)
+    await session.execute(text("SELECT 1"))  # can reach its DB (and Redis, later)
     return {"status": "ok"}
